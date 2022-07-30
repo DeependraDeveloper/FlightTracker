@@ -1,41 +1,61 @@
-const express=require('express');
-const axios=require('axios')
+const express = require("express");
+const axios = require("axios");
 
+function sockerRouter(io) {
+  const router = express.Router();
 
-function sockerRouter(io){
-    const router=express.Router()
+  router.get("/flights", async (req, res) => {
+    try {
+      let options = {
+        method: "get",
+        url: `http://api.aviationstack.com/v1/flights?access_key=48a294515c79a3eac5036a83cb093a49`,
+      };
+      let result = await axios(options);
+      let data = result.data.data;
+      let planedetails = data.filter((flight) => {
+        console.log(
+          `${flight["airline"]["name"]} flight ${flight["flight"]["iata"]}`,
+          `from ${flight["departure"]["airport"]} (${flight["departure"]["iata"]})`,
+          `to ${flight["arrival"]["airport"]} (${flight["arrival"]["iata"]}) is in the air.`
+        );
+      });
+      console.log(planedetails);
 
-    router.get("/flight",async(req,res)=>{
-        try {   
-            let options = {
-                method: 'get', 
-               // url: `https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=inr`
-                url: `https://api.aviationstack.com/v1/flights?access_key=498e29ff8a7dbe067131f3897cd65b77`
-            }
-            let result = await axios(options);
-            let data = result.data
-            return res.status(200).send({ msg:data, status: true })
-        } catch (err) {
-            return res.status(500).send({ msg: err.message })
-        }
-    })
+      return res.status(200).send({ result: data, status: true });
+    } catch (err) {
+      return res.status(500).send({ msg: err.message });
+    }
+  });
 
-    router.get("/airports",async(req,res)=>{
-        try {   
-            let options = {
-                method: 'get', 
-                url: `https://api.aviationstack.com/v1/airports?access_key=498e29ff8a7dbe067131f3897cd65b77`
-            }
-            let result = await axios(options);
-            let data = result.data
-            return res.status(200).send({ msg:"airpots due to the open source is not providing the api for dfree anymore", status: true })
-        } catch (err) {
-            return res.status(500).send({ msg: err.message })
-        }
-    })
+  router.get("/airports", async (req, res) => {
+    try {
+      let options = {
+        method: "get",
+        url: `http://api.aviationstack.com/v1/flights?access_key=48a294515c79a3eac5036a83cb093a49`,
+      };
+      let result = await axios(options);
+      let data = result.data.data;
+      return res.status(200).send({ result: data, status: true });
+    } catch (err) {
+      return res.status(500).send({ msg: err.message });
+    }
+  });
 
+  router.get("/airlines", async (req, res) => {
+    try {
+      let options = {
+        method: "get",
+        url: `http://api.aviationstack.com/v1/airlines?access_key=48a294515c79a3eac5036a83cb093a49`,
+      };
+      let result = await axios(options);
+      let data = result.data.data;
+      return res.status(200).send({ result: data, status: true });
+    } catch (err) {
+      return res.status(500).send({ msg: err.message });
+    }
+  });
 
-    return router
+  return router;
 }
 
 module.exports = sockerRouter;

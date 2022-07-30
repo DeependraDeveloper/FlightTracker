@@ -22,7 +22,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 
 //socket connection check
-io.on("connection",(socket)=>console.log(socket.id+"connected"))
+io.on("connection",(socket)=>console.log(`${socket.id} connected`))
 
 server.listen(3000,()=>{
     console.log('running on port 3000')
